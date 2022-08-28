@@ -2,7 +2,7 @@
  * @file wordle.c
  * @author HENRY JIANG (henryjiang13503@gmail.com)
  * @brief Text-based wordle clone that is printed onto terminal
- * @version 0.8
+ * @version 0.11
  * @date 2022-05-09
  * 
  * @copyright Copyright (c) 2022
@@ -49,14 +49,14 @@
 
 int main() {
     
-    List recordedInputs = ListNew();
+    //List recordedInputs = ListNew();
     srand(time NULL);
     Trie words = loadWords();
     //SetShow(words);
     assert(words != NULL);
-    char input[69420];
-    request_input(input, words);
-    ListInsert(recordedInputs, input);
+    request_input(words);
+    //ListInsert(recordedInputs, input);
+    //ListShow(recordedInputs);
     return 0;
 }
 
