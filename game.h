@@ -50,7 +50,7 @@ char *get_word();
   OUTPUT: NONE
 */
 
-void request_input(char *input, Trie s);
+void request_input(Trie s);
 
 /*
    FUNCTION
