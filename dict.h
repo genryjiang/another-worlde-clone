@@ -22,4 +22,5 @@ void TrieInsert(Trie root, char *key);
 
 bool TrieSearch(Trie root, char *key);
 
-
+// Function to print out all words stored in the trie.
+//void TrieShow(Trie root, char *str, int level);
