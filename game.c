@@ -9,33 +9,17 @@
 #include <assert.h>
 
 // NON STANDARD LIBRARIES
-#include "game.h"
+#include "colours.h"
+#include "dict.h"
 
 
 // GLOBAL DEFINITIONS
 
 #define MAX_LIM 6
 
-// GLOBAL MACROS FOR COLOURS IN STDOUT
-#define RESET   "\033[0m"
-#define BLACK   "\033[30 m"                 /* Black */
-#define RED     "\033[31m"                 /* Red */
-#define GREEN   "\033[32m"                 /* Green */
-#define YELLOW  "\033[33m"                 /* Yellow */
-#define BLUE    "\033[34m"                 /* Blue */
-#define MAGENTA "\033[35m"                 /* Magenta */
-#define CYAN    "\033[36m"                 /* Cyan */
-#define WHITE   "\033[37m"                 /* White */
-#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
-#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
-#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
-#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
-#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
-#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
-#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
-#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+// STATIC HELPER FUNCTIONS 
 
-
+// REMOVE NEWLINE IMPLEMENTATION FUNCTION
 void remove_newline(char *input) {
 
     // Find the newline or end of string
@@ -48,6 +32,16 @@ void remove_newline(char *input) {
     input[index] = '\0';
 }
 
+// CLEAR BUFFER IMPLEMENTATION FILE 
+
+void clearBuffer() {
+    int c;
+    do {
+        c = getchar();
+    } while (c != '\n' && c != EOF);
+}
+
+// MAIN FUNCTIONS
 
 Trie loadWords() {
   // Construct Trie
@@ -59,13 +53,16 @@ Trie loadWords() {
     exit(EXIT_FAILURE);
   }
   // Read these words in line by line and insert them into the trie
-  char temp[69420];
-  while (fgets(temp, 69420, words)) {
+  char temp[6];
+  while (fgets(temp, 6, words)) {
     remove_newline(temp);
     TrieInsert(new, temp);
   }
   printf(BOLDGREEN"Worlde words loaded!\n"RESET);
-  //SetShow(new);
+  //char curr[6];
+  //printf(BOLDWHITE"ALL TRIE WORDS: \n"RESET);
+  //TrieShow(new, curr, 0);
+
   return new;
 }
 
@@ -81,23 +78,28 @@ Trie loadWords() {
 // If present in word but wrong place --> print in yellow
 // Else --> no colour or GREY-D OUT     
 
-// Function 
+// Function (Prototype test)
 // Checks if the inputted word is valid or not
 // Input: 5 Letter word
 // Output: True or false statement
 
 
-void request_input(char *input, Trie s) {
-  remove_newline(input);
-  printf(GREEN"Enter word: ");
-  fgets(input, 6, stdin);
-  while (getchar() != '\n');
-  remove_newline(input);
-  if (TrieSearch(s, input)) {
-    printf(RED"Invalid word!\n"RESET);
-    request_input(input, s);
-  }
-  else {
-    printf(GREEN"Valid word!\n"RESET);
+void request_input(Trie s) {
+  char input[6];
+  printf(GREEN"Enter word: "RESET);
+  // Stop gap measure to stop multiple inputs --> Fix later
+  fflush(stdin);
+  //clearBuffer();
+  while (fgets(input, 6, stdin) != NULL) {
+    remove_newline(input);
+
+    if (TrieSearch(s, input)) {
+      printf(BOLDGREEN"VALID WORD\n"RESET);
+    }
+    else {
+      printf(BOLDRED"INVALID WORD\n"RESET);
+      request_input(s);
+    }
+    clearBuffer();
   }
 }
