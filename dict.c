@@ -16,6 +16,19 @@ struct trieNode {
     Trie children[CHAR_SIZE];
     bool isWordEnd;
 };
+/*
+static void remove_newline(char *input) {
+
+    // Find the newline or end of string
+    int index = 0;
+    while (input[index] != '\n' && input[index] != '\0') {
+        index++;
+    }
+    // Goto the last position in the array and replace with '\0'
+    // Note: will have no effect if already at null terminator
+    input[index] = '\0';
+}
+*/
 
 Trie newNode() {
     Trie pNode = malloc(sizeof(*pNode));
@@ -49,16 +62,44 @@ void TrieInsert(Trie root, char *key) {
 }
 
 bool TrieSearch(Trie root, char *key) {
-    Trie pCrawl = root;
-    int index = 0;
-    for (int i = 0; i < strlen(key); i++) {
-        index = CHAR_TO_INDEX(key[i]);
 
-        if (!pCrawl->children[i]) {
+    int index = 0;
+    Trie pCrawl = root;
+    if (key[0] == '\0') {
+        return false;
+    }
+    for (int level = 0; level < strlen(key); level++) {
+        index = CHAR_TO_INDEX(key[level]);
+  
+        if (!pCrawl->children[index])
             return false;
-        }
+  
         pCrawl = pCrawl->children[index];
     }
-    return pCrawl->isWordEnd;
+
+    return (pCrawl->isWordEnd);
 }
+
+/*
+static bool isLeaf(Trie root) {
+    return root->isWordEnd != false;
+}
+*/
+
+// Function to print all possible words (HELPER --> DO NOT USE IN MAIN GAME)
+/*
+void TrieShow(Trie root, char *str, int level) {
+    if (isLeaf(root)) {
+        str[level] = '\0';
+        printf("%s\n", str);
+    }
+
+    for (int i = 0; i < CHAR_SIZE; i++) {
+        if (root->children[i]) {
+            str[level] = i + 'a';
+            TrieShow(root->children[i], str, level + 1);
+        }
+    }
+}
+*/
 
