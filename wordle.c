@@ -13,8 +13,6 @@
 
     TO DO: 
 
-   1. IMPLEMENT RANDOM SELECTION OF WORD FROM AVAILABLE LIST *
-   2. IMPLEMENT SYSTEM TO READ IN CHARACTER INPUT **
    3. IMPLEMENT SYSTEM TO SHOW CORRECT LETTERS BUT IN WRONG PLACE (YELLOW) 
       AND CORRECT LETTERS IN SAME PLACE (GREEN) ***
   
@@ -22,10 +20,6 @@
 
     WILL GIVE USER PROMPT ON HOW TO PLAY WORDLE AND WHAT THE COLOURS MEAN
     WILL ALSO GIVE USER POSSIBLE COMMANDS THAT CAN BE USED TO INPUT (HINTS, ETC)
-
-    *  and ** --> Will use fgets for user input, while using rand() to draw random 
-          character from the available word list. Also draw up the general look
-          of the text-based game.
 
     HARDEST PART: PRINTING OUT STUFF IN COLOUR WHILE SHOWING THE 5
     TRIES IN WORDLE --> DO THIS WITH A COUNTER AND 5 STRINGS TO BE INPUT
@@ -45,18 +39,26 @@
 
 // NON-INCLUDED STANDARD LIBRARIES
 #include "game.h"
-#include "list.h"
+#include "dict.h"
+#include "colours.h"
 
 int main() {
     
-    //List recordedInputs = ListNew();
+    Game new = newInstance();
     srand(time NULL);
-    Trie words = loadWords();
-    //SetShow(words);
+    char random[6];
+    Trie words = loadWords(random);
+    printf("%s\n", random);
     assert(words != NULL);
-    request_input(words);
-    //ListInsert(recordedInputs, input);
-    //ListShow(recordedInputs);
+    while (ListLength(new->recordedInputs) < 4) {
+        request_input(words, random, new);
+        ListShow(new->recordedInputs);
+    }
+    if (ListLength(new->recordedInputs) == 4) {
+        printf(BOLDRED"GAME OVER!\n"RESET);
+    }
+    TrieFree(words);
+    FreeGame(new);
     return 0;
 }
 
