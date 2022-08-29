@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdbool.h>
 
 // CONSTANT DEFINITIONS
 #define MAX_STRING_LEN 6
@@ -5,34 +7,24 @@
 #define FALSE 0
 
 #include "dict.h"
+#include "list.h"
 
+// STRUCTURE VARIABLES 
+typedef struct game *Game;
+
+struct game {
+  char *input;
+  // ARRAY FOR INPUTS
+  // If the value at the index is 1 --> correct position
+  // If the value at the index is -1 --> character does not belong in the game
+  // If the value at the index is 0 --> unintalised
+  // If the value at the index is 2 --> in word, wrong position
+  int *inputInfo;
+  List recordedInputs; 
+};
 
 // Function definitions to be made in game.c
 
-// FUNCTION PROTOTYPES (HELPER FUNCTIONS)
-
-
-// FUNCTION
-// Remove newline character within a string 
-// INPUT: char array
-// OUTPUT: nothing
-void remove_newline(char input[MAX_STRING_LEN]);
-
-/* 
-   FUNCTION
-   USER-MADE STRCMPI FUNCTION TO BE USED IN THIS PROGRAM
-   INPUT: TWO CHAR POINTERS
-   OUTPUT: NUM (0 for equal, != 0 for not equal)
-
-*/
-
-int strcmpi(char* s1, char* s2);
-/* 
-  FUNCTION
-  Returns a word from the valid wordle words.txt
-  INPUT: Nothing
-  OUTPUT: String containing valid word 
-*/
 
 char *get_word();
 
@@ -46,11 +38,11 @@ char *get_word();
 /* 
   FUNCTION
   Requests for input from user from STDIN
-  INPUT: string 
+  INPUT: Trie and the chosen word
   OUTPUT: NONE
 */
 
-void request_input(Trie s);
+void request_input(Trie s, char *chosenWord, Game g);
 
 /*
    FUNCTION
@@ -59,6 +51,9 @@ void request_input(Trie s);
    OUTPUT: Set containing all valid wordle words
 */
 
-Trie loadWords();
+Trie loadWords(char *word);
 
 
+Game newInstance();
+
+void FreeGame(Game g);
