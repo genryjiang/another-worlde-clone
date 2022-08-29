@@ -16,19 +16,6 @@ struct trieNode {
     Trie children[CHAR_SIZE];
     bool isWordEnd;
 };
-/*
-static void remove_newline(char *input) {
-
-    // Find the newline or end of string
-    int index = 0;
-    while (input[index] != '\n' && input[index] != '\0') {
-        index++;
-    }
-    // Goto the last position in the array and replace with '\0'
-    // Note: will have no effect if already at null terminator
-    input[index] = '\0';
-}
-*/
 
 Trie newNode() {
     Trie pNode = malloc(sizeof(*pNode));
@@ -103,3 +90,17 @@ void TrieShow(Trie root, char *str, int level) {
 }
 */
 
+static void FreeTrieChildren(Trie root) {
+
+    for (int i = 0; i < CHAR_SIZE; i++) {
+        if (root->children[i] != NULL) {
+            FreeTrieChildren(root->children[i]);
+        }
+    }
+    // BASE CASE
+    free(root);
+}
+
+void TrieFree(Trie root) {
+    FreeTrieChildren(root);
+}
