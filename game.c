@@ -83,24 +83,28 @@ static bool isInWord(char *word, char input) {
   return false; 
 }
 
-static int getIndex(char *word, char input) {
+static int getIndex(char *word, char input, Game g) {
   int count = -1;
   for (int i = 0; i < strlen(word); i++) {
     if (word[i] == input) {
-      return i;
+      if (g->inputInfo[i] != 0) {
+        continue;
+      }
+      else {
+        return i;
+      }
     }
   }
   return count;
 }
 
 
-static bool isCorrectIndex(char *word, char input, int inputIndex) {
+static bool isCorrectIndex(char *word, char input, int inputIndex, Game g) {
   // Find the index of character for chosen word 
-  int count = getIndex(word, input);
+  int count = getIndex(word, input, g);
   if (inputIndex == count) {
     return true; 
   }
-
   if (count == -1) {
     return false; 
   }
@@ -195,8 +199,25 @@ void request_input(Trie s, char *chosenWord, Game g) {
 
       if (strcmp(g->input, chosenWord) == 0) {
         // PLACEHOLDER --> REMOVE IN LATER VARIATIONS
+        //printf(BOLDGREEN"Guessed the word!\n"RESET);
+        for (int i = 0; i < strlen(chosenWord); i++) {
+          if (isInWord(chosenWord, g->input[i])) {
+            if (isCorrectIndex(chosenWord, g->input[i], i, g)) {
+              g->inputInfo[i] = 1;
+              //printf(BOLDGREEN"RIGHT POSITION\n"RESET);
+            }
+            else {
+              g->inputInfo[i] = 2;
+              //printf(BOLDYELLOW"WRONG POSITION\n"RESET);
+            }
+          }
+          else {
+            g->inputInfo[i] = -1;
+            //printf(BOLDRED"NOT IN WORD\n"RESET);
+          }
+        }
+        gameHandoff(g);
         ListShow(g->recordedInputs);
-        printf(BOLDGREEN"Guessed the word!\n"RESET);
         FreeGame(g);
         TrieFree(s);
         exit(EXIT_SUCCESS);
@@ -205,7 +226,7 @@ void request_input(Trie s, char *chosenWord, Game g) {
       // Check word --> Search every character and check if it is in word
         for (int i = 0; i < strlen(chosenWord); i++) {
           if (isInWord(chosenWord, g->input[i])) {
-            if (isCorrectIndex(chosenWord, g->input[i], i)) {
+            if (isCorrectIndex(chosenWord, g->input[i], i, g)) {
               g->inputInfo[i] = 1;
               //printf(BOLDGREEN"RIGHT POSITION\n"RESET);
             }
